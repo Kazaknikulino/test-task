@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>График</title>
+		<script src="https://unpkg.com/react@16/umd/react.development.js"></script>   
+		<script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>   
+		<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>   
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.js"></script>	  
+
+		<style>
+			
+			.chart{
+				margin-left: auto;
+				margin-right: auto;
+				width: 1200Px;
+				height: 400Px;
+				background-color: azure;
+			}
+			.scale{
+				float: left;
+				margin-left: 18%;
+				color: darkgreen;
+				text-decoration: underline;
+			}
+			
+			
+			@media (max-width: 1200px) {
+  				.chart {
+					width: 900Px;
+					height: 300Px;
+				}
+				.scale{
+					margin-left: 16%;
+				}
+			}	
+
+			
+			@media (max-width: 900px) {
+  				.chart {
+					width: 600Px;
+					height: 200Px;
+				}
+				.scale{
+					margin-left: 12%;
+				}
+			}	
+				
+			
+			@media (max-width: 600px) {
+  				.chart {
+					width: 100%;
+				}
+				.scale{
+					width: 100%;
+
+					
+					
+				}
+			}					
+				
+			
+		</style>  
+
+	</head>
+	<body>
+		<div id="root"></div>
+		
+		
+		<script type="text/babel">
+
+		ReactDOM.render(
+			<div class="chart">
+				<canvas id="popChart" width="0" height="0"></canvas>
+				<div class="scale scale5">Последние 5 лет</div>
+				<div class="scale scale10">Последние 10 лет</div>
+				<div class="scale scaleAll">С 2000 до 2019</div>
+			</div>,
+			document.getElementById('root')
+		);
+		
+		 
+
+
+			//Данные о численности населения России. Данне взяты из википедии
+			var alldata = {
+					year: [2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019],
+					value: [146890128, 146303611, 145166731, 144963650, 144168205, 143474219, 142753551, 142220968, 142008838, 141903979, 142856536, 142865433, 143056383, 143347059, 143666931, 146267288, 146544710, 146804372, 146880432, 146780720]			
+			};
+
+			//преобразование объекта в json. По требованию тз
+			var jsondata = JSON.stringify(alldata);
+
+			//преобразование json в объект js. В дальнейшем будет использоваться этот объект
+			var data = JSON.parse(jsondata);
+
+			//alert(data.year[0]);
+			//alert(data.value[0]);
+
+
+
+			var popCanvas = document.getElementById("popChart");
+			var year = data.year;
+			var value = data.value;
+			//Вывести весь график при загрузке страницы
+			//all time
+			var barChart = new Chart(popCanvas, {
+				type: 'line',
+				data: {
+					labels: data.year.slice(-5),  // slice(-5) == последние 5 из массива
+					datasets: [{
+						data: data.value.slice(-5),
+						label: 'Население России 2015-2019г'
+					}]
+				}
+			});				
+
+
+
+
+			//Действия при нажатии. Смена графика
+			window.document.getElementsByClassName('scale5')[0]
+			.addEventListener('click', function (event) {
+				//console.log('pressed scale5');
+				//lastest 5 years
+				barChart.data.labels = data.year.slice(-5);
+				barChart.data.datasets[0].data = data.value.slice(-5);
+				barChart.data.datasets[0].label = 'Население России 2015-2019г' 
+				barChart.update();				
+				
+			});
+
+
+			//Действия при нажатии. Смена графика
+			window.document.getElementsByClassName('scale10')[0]
+			.addEventListener('click', function (event) {
+			   //console.log('pressed scale10');
+				//lastest 10 years
+				barChart.data.labels = data.year.slice(-10);
+				barChart.data.datasets[0].data = data.value.slice(-10);
+				barChart.data.datasets[0].label = 'Население России 2010-2019г' 
+				barChart.update();				
+				
+			});
+
+
+
+			//Действия при нажатии. Смена графика 
+			window.document.getElementsByClassName('scaleAll')[0]
+			.addEventListener('click', function (event) {
+			   //console.log('pressed scaleAll');
+				//all time
+				barChart.data.labels = data.year;
+				barChart.data.datasets[0].data = data.value;
+				barChart.data.datasets[0].label = 'Население России 2000-2019г' 
+				barChart.update();				
+				
+			});
+
+		</script>
+
+  	</body>
+	
+</html>
